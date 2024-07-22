@@ -6,14 +6,10 @@ import { JWT_SECRET } from "../secrets";
 import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
 import { UnproccessibleEntity } from "../exceptions/validation";
-import { LogInSchema, SignUpSchema } from "../schemas/users";
-import { UserNotFoundException } from "../exceptions/not-found";
+import { LogInSchema, SignUpSchema } from "../schemas/user";
+import { NotFoundException } from "../exceptions/not-found";
 
-export const signup = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const signup = async (req: Request, res: Response) => {
   SignUpSchema.parse(req.body);
 
   const { email, password, name } = req.body;
@@ -40,12 +36,8 @@ export const signup = async (
   res.json(user);
 };
 
-export const login = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const parsedData = LogInSchema.parse(req.body);
+export const login = async (req: Request, res: Response) => {
+  LogInSchema.parse(req.body);
 
   const { email, password } = req.body;
 
@@ -56,7 +48,7 @@ export const login = async (
   });
 
   if (!user) {
-    throw new UserNotFoundException(
+    throw new NotFoundException(
       "User does not exist!",
       ErrorCode.USER_NOT_FOUND,
     );

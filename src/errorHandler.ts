@@ -3,6 +3,8 @@ import { ErrorCode, HttpException } from "./exceptions/root";
 import { InternalException } from "./exceptions/internalException";
 import { UnproccessibleEntity } from "./exceptions/validation";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
+import { NotFoundException } from "./exceptions/not-found";
 
 export const errorHandler = (method: Function) => {
   return async (req: Request, res: Response, next: NextFunction) => {

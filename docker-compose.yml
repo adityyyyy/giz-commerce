@@ -1,16 +1,33 @@
-version: "3.3"
+version: "3.8"
+
 services:
-  db:
-    image: mysql
-    restart: always
+  postgres:
+    image: postgres:latest
+    container_name: example-database
     environment:
-      MYSQL_DATABASE: "ecommerce"
-      MYSQL_ROOT_PASSWORD: "root"
+      POSTGRES_DB: ecommerce
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
-      - "3306:3306"
-    expose:
-      - "3306"
+      - "5432:5432"
+    networks:
+      - pg-network
     volumes:
-      - data:/var/lib/mysql
+      - pg-data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pg-admin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@example.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "5050:80"
+    networks:
+      - pg-network
+
+networks:
+  pg-network:
+
 volumes:
-  data:
+  pg-data:

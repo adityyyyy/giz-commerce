@@ -37,9 +37,10 @@ export const authMiddleware = async (
           ErrorCode.UNAUTHORIZED_ACCESS,
         ),
       );
+    } else {
+      req.user = user;
     }
 
-    req.user = user!;
     next();
   } catch (err: any) {
     next(
