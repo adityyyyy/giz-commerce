@@ -1,2 +1,3 @@
-declare const addressRouter: import("express-serve-static-core").Router;
+import { Router } from "express";
+declare const addressRouter: Router;
 export default addressRouter;

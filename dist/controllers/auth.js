@@ -71,7 +71,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!user) {
         throw new not_found_1.NotFoundException("User does not exist!", root_1.ErrorCode.USER_NOT_FOUND);
     }
-    if (user && !(0, bcrypt_1.compareSync)(password, user === null || user === void 0 ? void 0 : user.password)) {
+    if (!(0, bcrypt_1.compareSync)(password, user === null || user === void 0 ? void 0 : user.password)) {
         throw new bad_request_1.BadRequestException("Wrong password!", root_1.ErrorCode.INCORRECT_PASSWORD);
     }
     const token = jwt.sign({

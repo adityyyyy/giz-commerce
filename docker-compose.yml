@@ -3,7 +3,7 @@ version: "3.8"
 services:
   postgres:
     image: postgres:latest
-    container_name: example-database
+    container_name: postgres
     environment:
       POSTGRES_DB: ecommerce
       POSTGRES_USER: postgres

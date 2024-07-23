@@ -9,6 +9,7 @@ const productRouter = (0, express_1.Router)();
 productRouter.post("/create", [auth_1.authMiddleware, adminMiddleware_1.adminMiddleware], (0, errorHandler_1.errorHandler)(product_1.createProduct));
 productRouter.put("/update/:id", [auth_1.authMiddleware, adminMiddleware_1.adminMiddleware], (0, errorHandler_1.errorHandler)(product_1.updateProduct));
 productRouter.delete("/delete/:id", [auth_1.authMiddleware, adminMiddleware_1.adminMiddleware], (0, errorHandler_1.errorHandler)(product_1.deleteProduct));
+productRouter.get("/search", [auth_1.authMiddleware], (0, errorHandler_1.errorHandler)(product_1.searchProduct));
 productRouter.get("/:id", [auth_1.authMiddleware], (0, errorHandler_1.errorHandler)(product_1.getProductById));
 productRouter.get("/", [auth_1.authMiddleware], (0, errorHandler_1.errorHandler)(product_1.listProduct));
 exports.default = productRouter;

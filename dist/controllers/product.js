@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProductById = exports.listProduct = exports.deleteProduct = exports.updateProduct = exports.createProduct = void 0;
+exports.searchProduct = exports.getProductById = exports.listProduct = exports.deleteProduct = exports.updateProduct = exports.createProduct = void 0;
 const __1 = require("..");
 const not_found_1 = require("../exceptions/not-found");
 const root_1 = require("../exceptions/root");
@@ -38,7 +38,7 @@ const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.updateProduct = updateProduct;
 const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const productToDelete = yield __1.prismaClient.product.delete({
+    yield __1.prismaClient.product.delete({
         where: {
             id: +req.params.id,
         },
@@ -49,14 +49,14 @@ const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.deleteProduct = deleteProduct;
 const listProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const count = __1.prismaClient.product.count();
+    const count = yield __1.prismaClient.product.count();
     let skip = 0;
     if (req.query.skip) {
         skip = +req.query.skip;
     }
     const products = yield __1.prismaClient.product.findMany({
         skip: skip,
-        take: 10,
+        take: 5,
     });
     if (!products) {
         throw new not_found_1.NotFoundException("No More Products to show", root_1.ErrorCode.PRODUCT_NOT_FOUND);
@@ -76,3 +76,27 @@ const getProductById = (req, res) => __awaiter(void 0, void 0, void 0, function*
     res.json(product);
 });
 exports.getProductById = getProductById;
+const searchProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c;
+    let skip = 0;
+    if (req.query.skip) {
+        skip = +req.query.skip;
+    }
+    const products = yield __1.prismaClient.product.findMany({
+        where: {
+            name: {
+                search: (_a = req.query.q) === null || _a === void 0 ? void 0 : _a.toString(),
+            },
+            description: {
+                search: (_b = req.query.q) === null || _b === void 0 ? void 0 : _b.toString(),
+            },
+            tags: {
+                search: (_c = req.query.q) === null || _c === void 0 ? void 0 : _c.toString(),
+            },
+        },
+        skip: skip,
+        take: 5,
+    });
+    res.json(products);
+});
+exports.searchProduct = searchProduct;

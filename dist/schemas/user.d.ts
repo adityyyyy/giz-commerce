@@ -43,20 +43,33 @@ export declare const AddressCreateSchema: z.ZodObject<{
 }>;
 export declare const AddressUpdateSchema: z.ZodObject<{
     lineOne: z.ZodOptional<z.ZodString>;
-    lineTwo: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    lineTwo: z.ZodOptional<z.ZodString>;
     pincode: z.ZodOptional<z.ZodString>;
     country: z.ZodOptional<z.ZodString>;
     city: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     lineOne?: string | undefined;
-    lineTwo?: string | null | undefined;
+    lineTwo?: string | undefined;
     pincode?: string | undefined;
     country?: string | undefined;
     city?: string | undefined;
 }, {
     lineOne?: string | undefined;
-    lineTwo?: string | null | undefined;
+    lineTwo?: string | undefined;
     pincode?: string | undefined;
     country?: string | undefined;
     city?: string | undefined;
+}>;
+export declare const UserUpdateSchema: z.ZodObject<{
+    name: z.ZodOptional<z.ZodString>;
+    shippingAddress: z.ZodOptional<z.ZodNumber>;
+    billingAddress: z.ZodOptional<z.ZodNumber>;
+}, "strip", z.ZodTypeAny, {
+    name?: string | undefined;
+    shippingAddress?: number | undefined;
+    billingAddress?: number | undefined;
+}, {
+    name?: string | undefined;
+    shippingAddress?: number | undefined;
+    billingAddress?: number | undefined;
 }>;

@@ -4,3 +4,4 @@ export declare const updateProduct: (req: Request, res: Response) => Promise<voi
 export declare const deleteProduct: (req: Request, res: Response) => Promise<void>;
 export declare const listProduct: (req: Request, res: Response) => Promise<void>;
 export declare const getProductById: (req: Request, res: Response) => Promise<void>;
+export declare const searchProduct: (req: Request, res: Response) => Promise<void>;

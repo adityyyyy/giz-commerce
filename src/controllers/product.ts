@@ -4,11 +4,12 @@ import { NotFoundException } from "../exceptions/not-found";
 import { ErrorCode } from "../exceptions/root";
 import { ProductCreateSchema, ProductUpdateSchema } from "../schemas/product";
 import { InternalException } from "../exceptions/internalException";
+import { Product } from "@prisma/client";
 
 export const createProduct = async (req: Request, res: Response) => {
   ProductCreateSchema.parse(req.body);
 
-  const product = await prismaClient.product.create({
+  const product: Product = await prismaClient.product.create({
     data: {
       ...req.body,
       tags: req.body.tags.join(","),
@@ -27,7 +28,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     product.tags = product.tags.join(",");
   }
 
-  const updatedProduct = await prismaClient.product.update({
+  const updatedProduct: Product = await prismaClient.product.update({
     where: {
       id: +req.params.id,
     },
@@ -38,7 +39,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 };
 
 export const deleteProduct = async (req: Request, res: Response) => {
-  const productToDelete = await prismaClient.product.delete({
+  await prismaClient.product.delete({
     where: {
       id: +req.params.id,
     },
@@ -50,16 +51,17 @@ export const deleteProduct = async (req: Request, res: Response) => {
 };
 
 export const listProduct = async (req: Request, res: Response) => {
-  const count = prismaClient.product.count();
+  const count: number = await prismaClient.product.count();
+
   let skip: number = 0;
 
   if (req.query.skip) {
     skip = +req.query.skip;
   }
 
-  const products = await prismaClient.product.findMany({
+  const products: Product[] = await prismaClient.product.findMany({
     skip: skip,
-    take: 10,
+    take: 5,
   });
 
   if (!products) {
@@ -73,7 +75,7 @@ export const listProduct = async (req: Request, res: Response) => {
 };
 
 export const getProductById = async (req: Request, res: Response) => {
-  const product = await prismaClient.product.findFirst({
+  const product: Product | null = await prismaClient.product.findFirst({
     where: {
       id: +req.params.id,
     },
@@ -87,4 +89,30 @@ export const getProductById = async (req: Request, res: Response) => {
   }
 
   res.json(product);
+};
+
+export const searchProduct = async (req: Request, res: Response) => {
+  let skip: number = 0;
+
+  if (req.query.skip) {
+    skip = +req.query.skip;
+  }
+
+  const products: Product[] = await prismaClient.product.findMany({
+    where: {
+      name: {
+        search: req.query.q?.toString(),
+      },
+      description: {
+        search: req.query.q?.toString(),
+      },
+      tags: {
+        search: req.query.q?.toString(),
+      },
+    },
+    skip: skip,
+    take: 5,
+  });
+
+  res.json(products);
 };

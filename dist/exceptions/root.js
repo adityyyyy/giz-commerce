@@ -21,4 +21,5 @@ var ErrorCode;
     ErrorCode[ErrorCode["UNAUTHORIZED_ACCESS"] = 4001] = "UNAUTHORIZED_ACCESS";
     ErrorCode[ErrorCode["PRODUCT_NOT_FOUND"] = 5001] = "PRODUCT_NOT_FOUND";
     ErrorCode[ErrorCode["ADDRESS_NOT_FOUND"] = 1004] = "ADDRESS_NOT_FOUND";
+    ErrorCode[ErrorCode["ORDER_NOT_FOUND"] = 5002] = "ORDER_NOT_FOUND";
 })(ErrorCode || (exports.ErrorCode = ErrorCode = {}));

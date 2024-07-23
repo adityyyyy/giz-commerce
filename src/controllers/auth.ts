@@ -8,13 +8,14 @@ import { ErrorCode } from "../exceptions/root";
 import { UnproccessibleEntity } from "../exceptions/validation";
 import { LogInSchema, SignUpSchema } from "../schemas/user";
 import { NotFoundException } from "../exceptions/not-found";
+import { User } from "@prisma/client";
 
 export const signup = async (req: Request, res: Response) => {
   SignUpSchema.parse(req.body);
 
   const { email, password, name } = req.body;
 
-  let user = await prismaClient.user.findFirst({
+  let user: User | null = await prismaClient.user.findFirst({
     where: { email },
   });
 
@@ -41,7 +42,7 @@ export const login = async (req: Request, res: Response) => {
 
   const { email, password } = req.body;
 
-  let user = await prismaClient.user.findFirst({
+  let user: User | null = await prismaClient.user.findFirst({
     where: {
       email,
     },
@@ -54,14 +55,14 @@ export const login = async (req: Request, res: Response) => {
     );
   }
 
-  if (user && !compareSync(password, user?.password)) {
+  if (!compareSync(password, user?.password)) {
     throw new BadRequestException(
       "Wrong password!",
       ErrorCode.INCORRECT_PASSWORD,
     );
   }
 
-  const token = jwt.sign(
+  const token: string = jwt.sign(
     {
       userId: user?.id,
       email: user?.email,

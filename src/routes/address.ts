@@ -8,7 +8,7 @@ import {
   updateAddress,
 } from "../controllers/user";
 
-const addressRouter = Router();
+const addressRouter: Router = Router();
 
 addressRouter.get("/", [authMiddleware], errorHandler(getAllAddresses));
 

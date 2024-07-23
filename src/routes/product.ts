@@ -5,12 +5,13 @@ import {
   deleteProduct,
   getProductById,
   listProduct,
+  searchProduct,
   updateProduct,
 } from "../controllers/product";
 import { authMiddleware } from "../middlewares/auth";
 import { adminMiddleware } from "../middlewares/adminMiddleware";
 
-const productRouter = Router();
+const productRouter: Router = Router();
 
 productRouter.post(
   "/create",
@@ -29,6 +30,8 @@ productRouter.delete(
   [authMiddleware, adminMiddleware],
   errorHandler(deleteProduct),
 );
+
+productRouter.get("/search", [authMiddleware], errorHandler(searchProduct));
 
 productRouter.get("/:id", [authMiddleware], errorHandler(getProductById));
 
