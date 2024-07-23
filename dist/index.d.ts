@@ -12,9 +12,9 @@ export declare const prismaClient: import("@prisma/client/runtime/library").Dyna
                 compute(addr: {
                     lineOne: string;
                     lineTwo: string | null;
-                    city: string;
-                    country: string;
                     pincode: string;
+                    country: string;
+                    city: string;
                 }): string;
             };
         };
@@ -36,9 +36,9 @@ export declare const prismaClient: import("@prisma/client/runtime/library").Dyna
                 compute(addr: {
                     lineOne: string;
                     lineTwo: string | null;
-                    city: string;
-                    country: string;
                     pincode: string;
+                    country: string;
+                    city: string;
                 }): string;
             };
         };

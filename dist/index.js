@@ -9,11 +9,13 @@ const secrets_1 = require("./secrets");
 const routes_1 = __importDefault(require("./routes"));
 const client_1 = require("@prisma/client");
 const errors_1 = require("./middlewares/errors");
+const logger_1 = require("./middlewares/logger");
 const app = (0, express_1.default)();
 app.get("/", (req, res) => {
     res.send("Server OK.");
 });
 app.use(express_1.default.json());
+app.use(logger_1.logger);
 app.use("/api", routes_1.default);
 exports.prismaClient = new client_1.PrismaClient({
     log: ["error"],

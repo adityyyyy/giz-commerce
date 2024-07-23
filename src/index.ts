@@ -3,6 +3,7 @@ import { PORT } from "./secrets";
 import routeRouter from "./routes";
 import { PrismaClient } from "@prisma/client";
 import { errorMiddleware } from "./middlewares/errors";
+import { logger } from "./middlewares/logger";
 
 const app: Express = express();
 
@@ -11,6 +12,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use(express.json());
+
+app.use(logger);
 
 app.use("/api", routeRouter);
 
