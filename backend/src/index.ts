@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from "express";
+import cors from "cors";
 import { PORT } from "./secrets";
 import routeRouter from "./routes";
 import { PrismaClient } from "@prisma/client";
@@ -6,6 +7,13 @@ import { errorMiddleware } from "./middlewares/errors";
 import { logger } from "./middlewares/logger";
 
 const app: Express = express();
+
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:5173"],
+  }),
+);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Server OK.");

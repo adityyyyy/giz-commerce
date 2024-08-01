@@ -31,10 +31,10 @@ productRouter.delete(
   errorHandler(deleteProduct),
 );
 
-productRouter.get("/search", [authMiddleware], errorHandler(searchProduct));
+productRouter.get("/search", errorHandler(searchProduct));
 
-productRouter.get("/:id", [authMiddleware], errorHandler(getProductById));
+productRouter.get("/:id", errorHandler(getProductById));
 
-productRouter.get("/", [authMiddleware], errorHandler(listProduct));
+productRouter.get("/", errorHandler(listProduct));
 
 export default productRouter;

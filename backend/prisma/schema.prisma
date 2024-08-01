@@ -58,8 +58,12 @@ model Product {
   name        String
   description String
   price       Int
+  image       String
+  brand       String
   tags        String
   stock       Int
+  rating      Decimal        @default(0)
+  num_reviews Int            @default(0)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @default(now()) @updatedAt
   cartItem    CartItem[]

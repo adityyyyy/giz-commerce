@@ -7,17 +7,17 @@ import { BadRequestException } from "../exceptions/bad-request";
 import { CartItem } from "@prisma/client";
 
 export const addCartItem = async (req: Request, res: Response) => {
-  const validatedData = CartAddItem.parse(req.body);
+  return await prismaClient.$transaction(async (tx) => {
+    const validatedData = CartAddItem.parse(req.body);
 
-  const existingCartItem = await prismaClient.cartItem.findFirst({
-    where: {
-      productId: validatedData.productId,
-      userId: req.user?.id,
-    },
-  });
+    const existingCartItem = await tx.cartItem.findFirst({
+      where: {
+        productId: validatedData.productId,
+        userId: req.user?.id,
+      },
+    });
 
-  const productStock: { stock: number } | null =
-    await prismaClient.product.findFirst({
+    const productStock: { stock: number } | null = await tx.product.findFirst({
       where: {
         id: validatedData.productId,
       },
@@ -26,52 +26,77 @@ export const addCartItem = async (req: Request, res: Response) => {
       },
     });
 
-  if (!productStock) {
-    throw new NotFoundException(
-      "Produt out of stock",
-      ErrorCode.PRODUCT_NOT_FOUND,
-    );
-  } else {
-    let quantity = validatedData.quantity;
-
-    if (existingCartItem) {
-      quantity += existingCartItem.quantity;
-    }
-
-    if (productStock.stock < quantity) {
-      throw new BadRequestException(
-        "Not enough stocks available",
+    if (!productStock) {
+      throw new NotFoundException(
+        "Produt out of stock",
         ErrorCode.PRODUCT_NOT_FOUND,
       );
+    } else {
+      let quantity = validatedData.quantity;
+
+      if (existingCartItem) {
+        quantity += existingCartItem.quantity;
+      }
+
+      if (productStock.stock < quantity) {
+        throw new BadRequestException(
+          "Not enough stocks available",
+          ErrorCode.PRODUCT_NOT_FOUND,
+        );
+      }
     }
-  }
 
-  let cartItem: CartItem;
+    let cartItem;
 
-  if (existingCartItem) {
-    const updatedCartItem = await prismaClient.cartItem.update({
-      where: {
-        id: existingCartItem.id,
-      },
-      data: {
-        quantity: existingCartItem.quantity + validatedData.quantity,
-      },
-    });
+    if (existingCartItem) {
+      const updatedCartItem = await tx.cartItem.update({
+        where: {
+          id: existingCartItem.id,
+        },
+        data: {
+          quantity: existingCartItem.quantity + validatedData.quantity,
+        },
+        select: {
+          id: true,
+          productId: true,
+          quantity: true,
+          product: {
+            select: {
+              name: true,
+              image: true,
+              price: true,
+            },
+          },
+        },
+      });
 
-    cartItem = updatedCartItem;
-  } else {
-    const createdCartItem: CartItem = await prismaClient.cartItem.create({
-      data: {
-        productId: validatedData.productId,
-        quantity: validatedData.quantity,
-        userId: req.user?.id!,
-      },
-    });
+      cartItem = updatedCartItem;
+    } else {
+      const createdCartItem = await tx.cartItem.create({
+        data: {
+          productId: validatedData.productId,
+          quantity: validatedData.quantity,
+          userId: req.user?.id!,
+        },
+        select: {
+          id: true,
+          productId: true,
+          quantity: true,
+          product: {
+            select: {
+              name: true,
+              image: true,
+              price: true,
+            },
+          },
+        },
+      });
 
-    cartItem = createdCartItem;
-  }
+      cartItem = createdCartItem;
+    }
 
-  res.json(cartItem);
+    res.json(cartItem);
+  });
 };
 
 export const deleteCartItem = async (req: Request, res: Response) => {
